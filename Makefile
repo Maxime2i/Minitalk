@@ -6,7 +6,7 @@
 #    By: mlangloi <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/12 18:55:33 by mlangloi          #+#    #+#              #
-#    Updated: 2023/05/13 15:09:01 by mlangloi         ###   ########.fr        #
+#    Updated: 2023/05/14 21:30:43 by mlangloi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,10 +18,14 @@ RM = rm -f
 SERVER = server
 CLIENT = client
 
-SERVER_SRCS = server.c
+SERVER_SRCS = server.c \
+		server2.c \
+
 SERVER_OBJS = $(SERVER_SRCS:.c=.o)
 
-CLIENT_SRCS = client.c
+CLIENT_SRCS = client.c \
+		client2.c \
+
 CLIENT_OBJS = $(CLIENT_SRCS:.c=.o)
 
 all: $(SERVER) $(CLIENT)

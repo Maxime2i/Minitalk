@@ -6,11 +6,25 @@
 /*   By: mlangloi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:52:50 by mlangloi          #+#    #+#             */
-/*   Updated: 2023/05/13 14:11:13 by mlangloi         ###   ########.fr       */
+/*   Updated: 2023/05/14 21:06:51 by mlangloi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"minitalk.h"
+#include"client.h"
+
+int	is_digit(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 int	ft_atoi(const char *nptr)
 {
@@ -38,17 +52,21 @@ int	ft_atoi(const char *nptr)
 	return (rep * sign);
 }
 
-void    ft_envoi_car(pid_t pid, char c)
+void	ft_envoi_car(pid_t pid, char c)
 {
-	int  bit;
+	int	bit;
 
 	bit = 0;
 	while (bit < 8)
 	{
 		if ((c & (0x01 << bit)) != 0)
-			kill(pid, SIGUSR1);
+		{
+			if (kill(pid, SIGUSR1) == -1)
+				ft_error(1);
+		}
 		else
-			kill(pid, SIGUSR2);
+			if (kill(pid, SIGUSR2) == -1)
+				ft_error(1);
 		bit++;
 		usleep(5000);
 	}
@@ -62,38 +80,29 @@ void	ft_attente(int signal, siginfo_t *siginfo, void *context)
 		ft_printf("Confirmation\n");
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	pid_t pid;
-	int i;
+	int					i;
 	struct sigaction	sa;
 
 	i = 0;
-
 	if (ac != 3)
-	{
-		ft_printf("mauvais argument !");
-		return (1);
-	}
-
+		ft_error(2);
+	if (!av[2][0])
+		ft_error(3);
+	if (is_digit(av[1]) == 1 || ft_strlen(av[1]) != 6)
+		ft_error(4);
 	sigemptyset(&sa.sa_mask);
 	sigaddset(&sa.sa_mask, SIGUSR1);
 	sa.sa_sigaction = ft_attente;
 	sa.sa_flags = SA_SIGINFO;
-
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
-
-	pid = ft_atoi(av[1]);
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+		ft_error(1);
+	if (sigaction(SIGUSR2, &sa, NULL) == -1)
+		ft_error(1);
 	while (av[2][i])
-	{
-		ft_envoi_car(pid, av[2][i]);
-		i++;
-	}
-	ft_envoi_car(pid, '\n');
-	ft_envoi_car(pid, '\0');
-	
-
-
-	return(0);
+		ft_envoi_car(atoi(av[1]), av[2][i++]);
+	ft_envoi_car(atoi(av[1]), '\n');
+	ft_envoi_car(atoi(av[1]), '\0');
+	return (0);
 }
