@@ -90,7 +90,7 @@ int	main(int ac, char **av)
 		ft_error(2);
 	if (!av[2][0])
 		ft_error(3);
-	if (is_digit(av[1]) == 1 || ft_strlen(av[1]) != 6)
+	if (is_digit(av[1]) == 1 || (ft_strlen(av[1]) != 6 && ft_strlen(av[1]) != 5))
 		ft_error(4);
 	sigemptyset(&sa.sa_mask);
 	sigaddset(&sa.sa_mask, SIGUSR1);
