@@ -6,7 +6,7 @@
 /*   By: mlangloi <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 13:52:50 by mlangloi          #+#    #+#             */
-/*   Updated: 2023/05/14 21:06:51 by mlangloi         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:21:26 by mlangloi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,10 @@ void	ft_attente(int signal, siginfo_t *siginfo, void *context)
 	(void)siginfo;
 	(void)context;
 	if (signal == SIGUSR1)
+	{
 		ft_printf("Confirmation\n");
+		exit(0);
+	}
 }
 
 int	main(int ac, char **av)
@@ -104,5 +107,9 @@ int	main(int ac, char **av)
 		ft_envoi_car(atoi(av[1]), av[2][i++]);
 	ft_envoi_car(atoi(av[1]), '\n');
 	ft_envoi_car(atoi(av[1]), '\0');
+	while(1)
+	{
+		pause();
+	}
 	return (0);
 }
